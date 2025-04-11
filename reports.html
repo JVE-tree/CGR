@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Reports | Professional Portfolio</title>
+    <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --accent: #6366f1;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: center;
+            mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.5) 30%, rgba(0, 0, 0, 0) 60%);
+            -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.5) 30%, rgba(0, 0, 0, 0) 60%);
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        header {
+            padding: 2rem 0;
+            border-bottom: 1px solid #2d2d2d;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        
+        .page-header {
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .page-header p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumbs a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .breadcrumbs a:hover {
+            color: var(--accent);
+        }
+        
+        .breadcrumbs .separator {
+            margin: 0 0.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+        }
+        
+        .year-section {
+            margin-bottom: 4rem;
+        }
+        
+        .year-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .year-title h2 {
+            font-size: 1.8rem;
+            margin-right: 1rem;
+        }
+        
+        .year-title .year-stats {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .report-card {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-left: 3px solid var(--accent);
+        }
+        
+        .report-card-content {
+            padding: 1.5rem;
+        }
+        
+        .report-type {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .report-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .report-date {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .report-date svg {
+            width: 14px;
+            height: 14px;
+            margin-right: 5px;
+            opacity: 0.7;
+        }
+        
+        .report-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .report-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        
+        .report-pages {
+            display: flex;
+            align-items: center;
+        }
+        
+        .report-pages svg {
+            width: 14px;
+            height: 14px;
+            margin-right: 5px;
+            opacity: 0.7;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #4f46e5;
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+        }
+        
+        .add-report {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+            border: 1px dashed #2d2d2d;
+        }
+        
+        .add-report p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        footer {
+            padding: 3rem 0;
+            border-top: 1px solid #2d2d2d;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+        
+        /* Search and filter section */
+        .search-filter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #252525;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            width: 300px;
+        }
+        
+        .search-box svg {
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+            margin-right: 8px;
+        }
+        
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            width: 100%;
+            outline: none;
+        }
+        
+        .search-box input::placeholder {
+            color: #6b7280;
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .filter-dropdown {
+            background-color: #252525;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .search-filter {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .filter-options {
+                justify-content: space-between;
+            }
+            
+            .reports-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .year-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .reports-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: space-around;
+            }
+            
+            .filter-options {
+                flex-direction: column;
+            }
+        }
+        .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0; top: 0;
+        width: 100vw; height: 100vh;
+        background-color: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+        }
+
+        .modal-content {
+        background-color: var(--bg-primary);
+        padding: 1.5rem;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 960px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.7);
+        position: relative;
+        }
+
+        .modal-content::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 20px 20px;
+        background-position: center;
+        mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 100%);
+        -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 100%);
+        z-index: -1;
+        border-radius: 12px;
+        }
+
+        .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        }
+
+        .modal-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        }
+
+        .close-btn {
+        font-size: 24px;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: color 0.2s ease;
+        background: none;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        }
+
+        .close-btn:hover {
+        color: var(--text-primary);
+        background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        #annexContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        }
+
+        .annex-link {
+        display: flex;
+        align-items: center;
+        background-color: var(--bg-secondary);
+        color: var(--text-secondary);
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: 1px solid #2d2d2d;
+        }
+
+        .annex-link:hover {
+        background-color: rgba(99, 102, 241, 0.1);
+        color: var(--accent);
+        border-color: var(--accent);
+        transform: translateY(-2px);
+        }
+
+        .annex-icon {
+        margin-right: 0.5rem;
+        }
+
+        iframe {
+        width: 100%;
+        height: 70vh;
+        border: none;
+        border-radius: 8px;
+        background-color: var(--bg-secondary);
+        }
+
+        /* Responsive adjustments for the modal */
+        @media (max-width: 768px) {
+        .modal-content {
+            width: 95%;
+            padding: 1rem;
+        }
+        
+        iframe {
+            height: 60vh;
+        }
+        
+        #annexContainer {
+            flex-direction: column;
+        }
+    }
+    </style>
+</head>
+<body>
+    <script src="reports.js"></script>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Julien VERETOUT</div>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="index.html#projects">Projects</a>
+                    <a href="#">Reports</a>
+                    <a href="index.html#contact">Contact</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="page-header">
+        <div class="container">
+            <h1>Activity Reports</h1>
+            <p>A comprehensive collection of my professional activity reports, documentation, and performance analyses sorted by year.</p>
+        </div>
+    </section>
+    
+    <main class="container">
+        <div class="breadcrumbs">
+            <a href="index.html">Home</a>
+            <span class="separator">/</span>
+            <span>Activity Reports</span>
+        </div>
+        
+        <div class="search-filter">
+            <div class="search-box">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" placeholder="Search reports...">
+            </div>
+            <div class="filter-options">
+                <select class="filter-dropdown">
+                    <option>All Report Types</option>
+                    <option>Annual Report</option>
+                    <option>Work Report</option>
+                    <option>Project Review</option>
+                    <option>Performance Report</option>
+                </select>
+                <select class="filter-dropdown">
+                    <option>All Years</option>
+                    <option>2027</option>
+                    <option>2026</option>
+                    <option>2025</option>
+                    <option>2024</option>
+                    
+                </select>
+            </div>
+        </div>
+        
+        <section class="year-section">
+            <div class="year-title">
+                <h2>2024-2025</h2>
+                <span class="year-stats">6 Reports</span>
+            </div>
+            
+            <div class="reports-grid">
+                
+                <div class="report-card">
+                    <div class="report-card-content">
+                        <div class="report-type">Work Report</div>
+                        <h3 class="report-title">CR1 Machining</h3>
+                        <div class="report-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            September 30, 2024
+                        </div>
+                        <p class="report-description">Final Work report of 2024 with performance metrics, project completions, and year-end evaluations.</p>
+                        <div class="report-meta">
+                            <div class="report-pages">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                                11 pages
+                            </div>
+                            <a href="#" class="btn" onclick="openModal('Reports/CR1.pdf', [])">View Report</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="report-card">
+                    <div class="report-card-content">
+                        <div class="report-type">Work Report</div>
+                        <h3 class="report-title">CR2 Pneumatic Diagram</h3>
+                        <div class="report-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            October 28, 2024
+                        </div>
+                        <p class="report-description">Final Work report of 2024 with performance metrics, project completions, and year-end evaluations.</p>
+                        <div class="report-meta">
+                            <div class="report-pages">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                                7 pages
+                            </div>
+                            <a href="#" class="btn" onclick="openModal('Reports/CR2.pdf', [])">View Report</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="report-card">
+                    <div class="report-card-content">
+                        <div class="report-type">Work Report</div>
+                        <h3 class="report-title">CR3 Mechanical Assembly</h3>
+                        <div class="report-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            December 9, 2024
+                        </div>
+                        <p class="report-description">Final Work report of 2024 with performance metrics, project completions, and year-end evaluations.</p>
+                        <div class="report-meta">
+                            <div class="report-pages">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                                5 pages
+                            </div>
+                            <a href="#" class="btn" onclick="openModal('Reports/CR3.pdf', [])">View Report</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="report-card">
+                    <div class="report-card-content">
+                        <div class="report-type">Work Report</div>
+                        <h3 class="report-title">CR4 Modeling</h3>
+                        <div class="report-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            January 1, 2025
+                        </div>
+                        <p class="report-description">Final Work report of 2024 with performance metrics, project completions, and year-end evaluations.</p>
+                        <div class="report-meta">
+                            <div class="report-pages">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                                7 pages
+                            </div>
+                            <a href="#" class="btn" onclick="openModal('Reports/CR4.pdf', [])">View Report</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="report-card">
+                    <div class="report-card-content">
+                        <div class="report-type">Work Report</div>
+                        <h3 class="report-title">CR5 Cleaning Station</h3>
+                        <div class="report-date">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            February 17, 2025
+                        </div>
+                        <p class="report-description">Final Work report of 2024 with performance metrics, project completions, and year-end evaluations.</p>
+                        <div class="report-meta">
+                            <div class="report-pages">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                                5 pages
+                            </div>
+                            <a href="#" class="btn" onclick="openModal('Reports/CR5.pdf', [])">View Report</a>
+                        </div>
+                    </div>
+                </div>
+                
+                
+
+
+
+
+
+            </div>
+            
+        </section>
+        
+        
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2024-2026 Julien VERETOUT | Portfolio</p>
+        </div>
+    </footer>
+
+    <div id="pdfModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Report Viewer</h3>
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+          </div>
+          <div id="annexContainer"></div>
+          <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+        </div>
+      </div>
+</body>
+
+</html>
