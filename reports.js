@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       
       // Show the annex container
-      annexContainer.style.display = 'flex';
+      annexContainer.style.display = 'block';
     } else {
       // Hide the annex container if no annexes
       annexContainer.style.display = 'none';
