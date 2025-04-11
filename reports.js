@@ -82,13 +82,14 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       
       // Show the annex container
-      annexContainer.style.display = 'block';
+      annexContainer.style.display = 'flex';
     } else {
       // Hide the annex container if no annexes
       annexContainer.style.display = 'none';
     }
   
-    viewer.src = pdfUrl;
+    const url = new URL(pdfUrl, window.location.origin);
+    viewer.src = url.pathname;
     modal.style.display = 'flex';
   }
   
